@@ -1,3 +1,11 @@
+<?php
+session_start();
+require 'config/config.php';
+if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
+  header('Location:index.php');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,102 +36,42 @@
 </head>
 
 <body class="bg-black-alt font-sans leading-normal tracking-normal">
+
+<?php
+  $stmt=$pdo->prepare("SELECT * FROM posts ORDER BY id DESC");
+  $stmt->execute();
+  $result=$stmt->fetchAll();
+?>
 <h1 class="text-blue-500 text-4xl text-center upppercase tracking-wide font-semibold">Welcome to my blog</h1>
 
-<div class="m-auto grid grid-cols-3 gap-4 mt-4 ">
 
-  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6 mb-6">
-    <img class="w-full" src="admin/images/tesla.png" alt="">
-    <div class="px-6 py-4">
+
+    <?php if($result){
+      $i;
+      foreach($result as $value) {
+    ?>
+      <div class="lg:flex-1 lg:mx-10 row-span-3">
+        <div class=" bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
+          <img class="w-full" src="admin/images/<?php echo $value['image'] ?>" alt="">
+
+      <div class="px-6 py-4">
       <div class="font-bold text-xl mb-2">
-        Caption
+        <?php echo $value['title']?>
       </div>
       <p class="text-black-900 text-base">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, veniam. Natus tempore voluptate laudantium itaque eum, maxime assumenda, praesentium consequuntur quidem pariatur, totam quam. Nihil eos numquam quisquam provident ratione.
+      <?php echo substr($value['content'],0,50)?>
       </p>
-    </div>
-
-  </div>
-
-  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6" >
-    <img class="w-full" src="admin/images/tesla.png" alt="">
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2">
-        Caption
       </div>
-      <p class="text-black-900 text-base">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, veniam. Natus tempore voluptate laudantium itaque eum, maxime assumenda, praesentium consequuntur quidem pariatur, totam quam. Nihil eos numquam quisquam provident ratione.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
-    <img class="w-full" src="admin/images/tesla.png" alt="">
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2">
-        Caption
-      </div>
-      <p class="text-black-900 text-base">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, veniam. Natus tempore voluptate laudantium itaque eum, maxime assumenda, praesentium consequuntur quidem pariatur, totam quam. Nihil eos numquam quisquam provident ratione.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
-    <img class="w-full" src="admin/images/tesla.png" alt="">
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2">
-        Caption
-      </div>
-      <p class="text-black-900 text-base">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, veniam. Natus tempore voluptate laudantium itaque eum, maxime assumenda, praesentium consequuntur quidem pariatur, totam quam. Nihil eos numquam quisquam provident ratione.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
-    <img class="w-full" src="admin/images/tesla.png" alt="">
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2">
-        Caption
-      </div>
-      <p class="text-black-900 text-base">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, veniam. Natus tempore voluptate laudantium itaque eum, maxime assumenda, praesentium consequuntur quidem pariatur, totam quam. Nihil eos numquam quisquam provident ratione.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
-    <img class="w-full" src="admin/images/tesla.png" alt="">
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2">
-        Caption
-      </div>
-      <p class="text-black-900 ">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, veniam. Natus tempore voluptate laudantium itaque eum, maxime assumenda, praesentium consequuntur quidem pariatur, totam quam. Nihil eos numquam quisquam provident ratione.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
-    <img class="w-full" src="admin/images/tesla.png" alt="">
-    <div class="px-6 py-4">
-      <div class="font-bold text-xl mb-2">
-        Caption
-      </div>
-      <p class="text-black-900 text-base">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, veniam. Natus tempore voluptate laudantium itaque eum, maxime assumenda, praesentium consequuntur quidem pariatur, totam quam. Nihil eos numquam quisquam provident ratione.
-      </p>
-    </div>
-
-  </div>
-
-
 </div>
+</div>
+    <?php
+    $i++;
+      }
+    } ?>
+
+
+
+
+
 </body>
 </html>

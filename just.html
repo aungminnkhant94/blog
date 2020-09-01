@@ -1,0 +1,30 @@
+<?php
+  $stmt=$pdo->prepare("SELECT * FROM posts ORDER BY id DESC");
+  $stmt->execute();
+  $result=$stmt->fetchAll();
+?>
+
+
+<?php if($result){
+      foreach($result as $value) {
+    ?>
+<div class="grid grid-cols-3  gap-3">
+
+  <div class="mx-10 row-span-3">
+	  <div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
+		  <img class="w-full" src="admin/images/<?php echo $value['image'] ?>" alt="">
+		  <div class="px-6 py-6">
+			  <div class="font-bold text-xl mb-2">
+				  <?php echo $value['title'] ?>
+			  </div>
+			  <p class="text-black-900 text-base">
+			  <?php echo substr($value['content'],0,50)?>
+			  </p>
+		  </div>
+	  </div>
+  </div>	
+  
+</div>
+<?php
+}
+}?>

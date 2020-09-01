@@ -50,7 +50,9 @@ if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
 ?>
 	<div class="card mx-auto">
 	<div class="bg-gray-800 max-w-sm rounded overflow-hidden shadow-lg border-gray-600 mb-6">
+		  <a href="blogdetail.php?id=<?php echo $value['id'] ?>">
 		  <img class="object-scale-down h-48 w-full" src="admin/images/<?php echo $value['image'] ?>" alt="">
+		  </a>
 		  <div class="px-6 py-6">
 			  <div class="font-bold text-xl mb-2">
 				  <?php echo $value['title'] ?>

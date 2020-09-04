@@ -2,6 +2,7 @@
 
 session_start();
 require 'config/config.php';
+require 'config/common.php';
 if ($_POST){
     $email =$_POST['email'];
     $password=$_POST['password'];
@@ -58,8 +59,8 @@ if ($_POST){
     <div class="px-12 py-4 bg-gray-200 border border-gray-400 rounded-lg">
         <div class="col-md-8">
                 
-                    <form method="POST" action="">
-
+                    <form method="POST" action="login.php">
+                    <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                         
                         <div class="mb-6">
                             <label  class="block mb-2 uppercase font-bold text-xs text-gray-700"

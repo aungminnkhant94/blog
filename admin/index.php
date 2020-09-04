@@ -1,8 +1,26 @@
 <?php
 session_start();
 require '../config/config.php';
+require '../config/common.php';
 if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
   header('Location:index.php');
+}
+
+if ($_SESSION['role'] != 1) {
+  header('Location: login.php');
+}
+
+if ($_SESSION['role'] != 1) {
+  header('Location: login.php');
+}
+
+if ($_POST['search']) {
+  setcookie('search',$_POST['search'], time() + (86400 * 30), "/");
+}else{
+  if ($_GET['pageno']) {
+    unset($_COOKIE['search']); 
+    setcookie('search', null, -1, '/'); 
+  }
 }
 ?>
 
@@ -40,7 +58,7 @@ if(!empty($_GET['pageno'])){
 $numOfrecs=3;
 $offset=($pageno-1)* $numOfrecs;
 
-if(empty($_POST['search'])){
+if(empty($_POST['search']) && !isset($_COOKIE['search'])){
   $stmt=$pdo->prepare("SELECT * FROM posts ORDER BY id DESC");
   $stmt->execute();
   $rawresult=$stmt->fetchAll();
@@ -50,7 +68,7 @@ if(empty($_POST['search'])){
   $stmt->execute();
   $result=$stmt->fetchAll();
 }else{
-  $searchKey=$_POST['search'];
+  $searchKey=$_POST['search'] ? $_POST['search']:$_COOKIE['search'];
   $stmt=$pdo->prepare("SELECT * FROM posts WHERE title LIKE '%$searchKey%' ORDER BY id DESC");
   $stmt->execute();
   $rawresult=$stmt->fetchAll();
@@ -71,8 +89,8 @@ if($result){
     ?>
     <tr >
     <td class="border px-4 py-2 text-center"><?php echo $i; ?></td>
-    <td class="border px-4 py-2 text-center"><?php echo $value ['title']?></td>
-    <td class="border px-4 py-2 text-center"><?php echo substr($value['content'],0,50)?></td>
+    <td><?php echo escape($value['title'])?></td>
+    <td><?php echo escape(substr($value['content'],0,50))?></td>
     <td class="border px-4 py-2 text-center ">
     <a href="edit.php?id=<?php echo $value['id'];?>"class="square-full bg-yellow-500 px-4 py-2 text-white mr-2">Edit</a>
     <a href="delete.php?id=<?php echo $value['id'];?>"

@@ -2,6 +2,7 @@
 
 session_start();
 require '../config/config.php';
+require '../config/common.php';
 if ($_POST){
     $email =$_POST['email'];
     $password=$_POST['password'];
@@ -12,12 +13,13 @@ if ($_POST){
     $user=$stmt->fetch(PDO::FETCH_ASSOC);
 
     if($user){
-        if($user['password']==$password){
-            $_SESSION['user_id']=$user['id'];
-            $_SESSION['username']=$user['name'];
-            $_SESSION['logged_in']=time();
-
-            header('Location:index.php');
+        if (password_verify($password,$user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['name'];
+            $_SESSION['role'] = 1;
+            $_SESSION['logged_in'] = time();
+      
+            header('Location: index.php');
         }
     }
     echo "<script>alert('Incorrect credentials') </script>";
@@ -59,7 +61,7 @@ if ($_POST){
         <div class="col-md-8">
                 
                     <form method="POST" action="">
-
+                    <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                         
                         <div class="mb-6">
                             <label  class="block mb-2 uppercase font-bold text-xs text-gray-700"

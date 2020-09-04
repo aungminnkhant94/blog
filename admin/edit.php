@@ -2,15 +2,25 @@
 
 session_start();
 require '../config/config.php';
+require '../config/common.php';
 
 if(empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])){
   header('Location:index.php');
 }
 
 if($_POST){
-    $id =$_POST['id'];
-    $title=$_POST['title'];
-    $content=$_POST['content'];
+    if(empty($_POST['title'])||empty($_POST['content'])){
+        if (empty($_POST['title'])) {
+            $titleError = 'Title cannot be null';
+          }
+          if (empty($_POST['content'])) {
+            $contentError = 'Content cannot be null';
+          }
+    }else{
+        $id = $_POST['id'];
+        $title = $_POST['title'];
+        $content = $_POST['content'];
+    }
 
     if($_FILES['image']['name']!=null){
         $file ='images/'.($_FILES['image']['name']);
@@ -27,12 +37,6 @@ if($_POST){
             if($result){
                 echo "<script>alert('Successfully Updated');window.location.href='index.php';</script>";
             }
-        }
-    }else{
-        $stmt=$pdo->prepare("UPDATE posts SET title='$title',content='$content' WHERE id='$id' ");
-        $result=$stmt->execute();
-        if($result){
-            echo "<script>alert('Successfully Updated');window.location.href='index.php';</script>";
         }
     }
 }
@@ -53,8 +57,7 @@ include('../main/header.html');
         <div class="col-md-8">
                 
                     <form method="POST" action=""enctype="multipart/form-data">
-
-                        
+                    <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                         <div class="mb-6">
                         <input type="hidden"name="id"value="<?php echo $result[0]['id'] ?>">
                             <label  class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -65,7 +68,7 @@ include('../main/header.html');
                                     type="text"
                                     name="title"
                                     id="title"
-                                    value="<?php echo $result[0]['title'] ?>"
+                                    value="<?php echo escape($result[0]['title'])?>"
                             >
                         </div>
 
@@ -75,7 +78,7 @@ include('../main/header.html');
                                     Content
                                 </label>
                             <textarea class="resize-none border rounded focus:outline-none focus:shadow-outline" name="content" id="content" cols="30" rows="10">
-                                <?php echo $result[0]['content'] ?>
+                            <?php echo escape($result[0]['content'])?>
                             </textarea>
                         </div>
 

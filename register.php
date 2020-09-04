@@ -2,6 +2,7 @@
 
 session_start();
 require 'config/config.php';
+require 'config/common.php';
 if ($_POST){
     $name =$_POST['name'];
     $email =$_POST['email'];
@@ -15,9 +16,9 @@ if ($_POST){
     if($user){
         echo"<script>alert('This email already registered')</script>";
     }else{
-        $stmt=$pdo->prepare("INSERT INTO users (name,email,password) VALUES (:name,:email,:password)");
+        $stmt=$pdo->prepare("INSERT INTO users (name,email,password,role) VALUES (:name,:email,:password,:role)");
         $result=$stmt->execute(
-            array(':name'=>$name,':email'=>$email,':password'=>$password)
+            array(':name'=>$name,':email'=>$email,':password'=>$password,':role'=>0)
         );
         if($result){
             echo "<script>alert('Successfully Register,You can now login');window.location.href='login.php';</script>";
@@ -61,9 +62,9 @@ if ($_POST){
     <div class="px-12 py-4 bg-gray-200 border border-gray-400 rounded-lg">
         <div class="col-md-8">
                 
-                    <form method="POST" action="">
+                    <form method="POST" action="register.php">
 
-                        
+                    <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                         <div class="mb-6">
                             <label  class="block mb-2 uppercase font-bold text-xs text-gray-700"
                                     for="name">
